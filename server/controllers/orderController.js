@@ -11,7 +11,7 @@ export const placeOrderCOD = async (req, res) => {
     try {
         const { address, userId, items } = req.body;
         if (!address || items.length === 0) {
-            return res.json({ success: true, message: "Invaild Data" })
+            return res.json({ success: true, message: "Invalid Data" })
         }
 
         // Calculate Amount Using Items       acc ==> initial count of the amount
@@ -45,11 +45,11 @@ export const placeOrderCOD = async (req, res) => {
 
 export const placeOrderStripe = async (req, res) => {
     try {
-        const { address, userId, items } = req.body;
+        const { userId, items, address } = req.body;
         const { origin } = req.headers;
 
         if (!address || items.length === 0) {
-            return res.json({ success: true, message: "Invaild Data" })
+            return res.json({ success: true, message: "Invalid Data" })
         }
 
         let productData = [];
@@ -60,7 +60,7 @@ export const placeOrderStripe = async (req, res) => {
             productData.push({
                 name: product.name,
                 price: product.offerPrice,
-                quantity: item.quantity
+                quantity: item.quantity,
             });
             return (await acc) + product.offerPrice * item.quantity;
         }, 0) //(0 is initial acc value )
@@ -92,8 +92,6 @@ export const placeOrderStripe = async (req, res) => {
                 quantity: item.quantity,
             }
         })
-
-
 
         // create session
 
@@ -128,7 +126,7 @@ export const stripeWebhooks = async (request, response) => {
         event = stripeInstance.webhooks.constructEvent(
             request.body,
             sig,
-            process.env.STRIPE_WEBHOOK_SCRET
+            process.env.STRIPE_WEBHOOK_SECRET
         );
     } catch (error) {
         response.status(400).send(`Webhook Error: ${error.message}`)
@@ -137,7 +135,7 @@ export const stripeWebhooks = async (request, response) => {
     // Handle the event
 
     switch (event.type) {
-        case "payment_intent.succeded": {
+        case "payment_intent.succeeded": {
             const paymentIntent = event.data.object;
             const paymentIntentId = paymentIntent.id;
 
@@ -156,10 +154,10 @@ export const stripeWebhooks = async (request, response) => {
 
             // Clear user cart
 
-            await User.findByIdAndUpdate(userId, { cartItmes: {} })
+            await User.findByIdAndUpdate(userId, { cartItems: {} })
             break;
         }
-        case "payment_intent.succeded": {
+        case "payment_intent.failed": {
             const paymentIntent = event.data.object;
             const paymentIntentId = paymentIntent.id;
 
@@ -178,7 +176,7 @@ export const stripeWebhooks = async (request, response) => {
 
 
         default:
-            console.error(`Unhandled event type $(event.type)`)
+            console.error(`Unhandled event type ${event.type}`)
             break;
     }
     response.json({ received: true })

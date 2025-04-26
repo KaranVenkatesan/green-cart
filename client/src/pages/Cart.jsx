@@ -1,7 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAppContext } from "../context/AppContext"
 import { assets, dummyAddress } from "../assets/assets"
-import { useEffect } from "react"
 import toast from "react-hot-toast"
 
 const Cart = () => {
@@ -57,13 +56,13 @@ const Cart = () => {
 
                 if (data.success) {
                     toast.success(data.message);
-                    setCartItems({}) 
+                    setCartItems({})
                     navigate('/my-orders')
                 }
                 else {
                     toast.error(data.message)
                 }
-            } else{
+            } else {
                 // Place order with Stripe
                 const { data } = await axios.post('/api/order/stripe', {
                     userId: user._id,
@@ -72,7 +71,7 @@ const Cart = () => {
                 })
 
                 if (data.success) {
-                 window.location.replace(data.url)
+                    window.location.replace(data.url)
                 }
                 else {
                     toast.error(data.message)
@@ -171,7 +170,7 @@ const Cart = () => {
                         {showAddress && (
                             <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
                                 {addresses.map((address, index) => (
-                                    <p onClick={() => { setSelectedAddress(address); setShowAddress(false) }} className="text-gray-500 p-2 hover:bg-gray-100">
+                                    <p key={index} onClick={() => { setSelectedAddress(address); setShowAddress(false) }} className="text-gray-500 p-2 hover:bg-gray-100">
                                         {address.street},{address.city},{address.state},{address.country}
                                     </p>))}
                                 <p onClick={() => navigate('/add-address')} className="text-primary text-center cursor-pointer p-2 hover:bg-primary/10">
