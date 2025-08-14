@@ -100,3 +100,15 @@ export const logout = async (req, res) => {
         return res.json({ success: false, message: error.message })
     }
 }
+
+// Update Wishlist : /api/user/wishlist
+export const updateWishlist = async (req, res) => {
+    try {
+        const { userId, wishlist } = req.body;
+        await User.findByIdAndUpdate(userId, { wishlist })
+        res.json({ success: true, message: "Wishlist Updated" })
+    } catch (error) {
+        console.log(error.message);
+        return res.json({ success: false, message: error.message })
+    }
+}

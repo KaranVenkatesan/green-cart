@@ -21,7 +21,8 @@ export const AppContextProvider = ({ children }) => {
     const [products, setProducts] = useState([])
 
     const [cartItems, setCartItems] = useState({})
-    const [searchQuery, setSearchQuery] = useState({})
+    const [searchQuery, setSearchQuery] = useState('')
+    const [wishlist, setWishlist] = useState([])
 
     //  Fetch seller status
     const fetchSeller = async () => {
@@ -46,6 +47,7 @@ export const AppContextProvider = ({ children }) => {
             if (data.success) {
                 setUser(data.user)
                 setCartItems(data.user.cartItems)
+                setWishlist(data.user.wishlist || [])
             }
         } catch (error) {
             setUser(null)
@@ -125,6 +127,20 @@ export const AppContextProvider = ({ children }) => {
 
     }
 
+    // Wishlist functions
+    const addToWishlist = (productId) => {
+        if (!wishlist.includes(productId)) {
+            const newWishlist = [...wishlist, productId]
+            setWishlist(newWishlist)
+            toast.success("Added to wishlist")
+        }
+    }
+
+    const removeFromWishlist = (productId) => {
+        const newWishlist = wishlist.filter(id => id !== productId)
+        setWishlist(newWishlist)
+        toast.success("Removed from wishlist")
+    }
     useEffect(() => {
         fetchUser()
         fetchSeller()
@@ -150,8 +166,29 @@ export const AppContextProvider = ({ children }) => {
         }
     },[cartItems])
 
-    const value = { navigate, user, setUser, isSeller, setIsSeller, showUserLogin, setShowUserLogin, products, currency, addToCart, upDateCartItem, cartItems, setCartItems, removeFromCart, searchQuery, setSearchQuery, getCartCount, getCartAmount, axios, fetchProducts }
+    // Update wishlist in database
+    useEffect(() => {
+        const updateWishlist = async () => {
+            try {
+                if (user) {
+                    await axios.post('/api/user/wishlist', { wishlist })
+                }
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+        
+        if (user) {
+            updateWishlist()
+        }
+    }, [wishlist])
 
+    const value = { 
+        navigate, user, setUser, isSeller, setIsSeller, showUserLogin, setShowUserLogin, 
+        products, currency, addToCart, upDateCartItem, cartItems, setCartItems, removeFromCart, 
+        searchQuery, setSearchQuery, getCartCount, getCartAmount, axios, fetchProducts,
+        wishlist, addToWishlist, removeFromWishlist
+    }
     return <AppContext.Provider value={value}>
         {children}
     </AppContext.Provider>

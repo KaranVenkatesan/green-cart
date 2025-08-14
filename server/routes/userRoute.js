@@ -1,5 +1,5 @@
 import express from "express";
-import { isAuth, login, logout, register } from "../controllers/userController.js";
+import { isAuth, login, logout, register, updateWishlist } from "../controllers/userController.js";
 import authUser from "../middlewares/authUser.js";
 
 
@@ -9,5 +9,6 @@ userRouter.post('/register', register)
 userRouter.post('/login', login)
 userRouter.get('/is-auth', authUser, isAuth)
 userRouter.get('/logout', authUser, logout)
+userRouter.post('/wishlist', authUser, updateWishlist)
 
 export default userRouter;

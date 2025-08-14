@@ -1,13 +1,17 @@
 import React from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
+import WishlistButton from "./WishlistButton";
 
 const ProductCard = ({ product }) => {
     const { currency, addToCart, removeFromCart, cartItems,navigate } = useAppContext()
 
 
     return product && (
-        <div onClick={()=>{navigate(`/products/${product.category.toLowerCase()}/${product._id}`); scrollTo(0,0)}} className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full">
+        <div onClick={()=>{navigate(`/products/${product.category.toLowerCase()}/${product._id}`); scrollTo(0,0)}} className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full hover:shadow-lg transition-shadow cursor-pointer group relative">
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                <WishlistButton productId={product._id} />
+            </div>
             <div className="group cursor-pointer flex items-center justify-center px-2">
                 <img className="group-hover:scale-105 transition max-w-26 md:max-w-36" src={product.image[0]} alt={product.name} />
             </div>
@@ -22,7 +26,7 @@ const ProductCard = ({ product }) => {
                 </div>
                 <div className="flex items-end justify-between mt-3">
                     <p className="md:text-xl text-base font-medium text-primary">
-                        {currency} {product.offerPrice} {" "} <span className="text-gray-500/60 md:text-sm text-xs line-through">{currency}${product.price}</span>
+                        {currency} {product.offerPrice} {" "} <span className="text-gray-500/60 md:text-sm text-xs line-through">{currency}{product.price}</span>
                     </p>
                     <div onClick={(e)=>{e.stopPropagation()}} className="text-primary">
                         {!cartItems[product._id]? (
@@ -43,6 +47,19 @@ const ProductCard = ({ product }) => {
                         )}
                     </div>
                 </div>
+            </div>
+            
+            {/* Quick View Button */}
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        // Quick view functionality can be added here
+                    }}
+                    className="bg-white text-primary border border-primary px-3 py-1 rounded text-xs hover:bg-primary hover:text-white transition"
+                >
+                    Quick View
+                </button>
             </div>
         </div>
     );
