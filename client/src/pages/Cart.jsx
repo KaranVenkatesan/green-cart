@@ -105,22 +105,30 @@ const Cart = () => {
                 </h1>
 
                 {cartArray.length === 0 ? (
-                    <div className="text-center py-16">
-                        <div className="mb-4">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="mx-auto text-gray-300">
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <div className="mb-6">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="mx-auto text-gray-300">
                                 <circle cx="9" cy="21" r="1"/>
                                 <circle cx="20" cy="21" r="1"/>
                                 <path d="m1 1 4 4 2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                             </svg>
                         </div>
-                        <h3 className="text-xl font-medium text-gray-600 mb-2">Your cart is empty</h3>
-                        <p className="text-gray-400 mb-6">Add some products to get started</p>
-                        <button 
-                            onClick={() => navigate('/products')}
-                            className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dull transition"
-                        >
-                            Start Shopping
-                        </button>
+                        <h3 className="text-2xl font-medium text-gray-600 mb-3">Your cart is empty</h3>
+                        <p className="text-gray-400 mb-8 max-w-md">Looks like you haven't added any items to your cart yet. Start shopping to fill it up!</p>
+                        <div className="flex gap-4">
+                            <button 
+                                onClick={() => navigate('/products')}
+                                className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dull transition font-medium"
+                            >
+                                Start Shopping
+                            </button>
+                            <button 
+                                onClick={() => navigate('/')}
+                                className="border border-gray-300 text-gray-600 px-8 py-3 rounded-lg hover:bg-gray-50 transition font-medium"
+                            >
+                                Browse Categories
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <>

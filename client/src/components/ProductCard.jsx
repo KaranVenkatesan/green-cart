@@ -1,18 +1,22 @@
 import React from "react";
+import { useState } from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import WishlistButton from "./WishlistButton";
+import QuickView from "./QuickView";
 
 const ProductCard = ({ product }) => {
-    const { currency, addToCart, removeFromCart, cartItems,navigate } = useAppContext()
+    const { currency, addToCart, removeFromCart, cartItems, navigate } = useAppContext()
+    const [showQuickView, setShowQuickView] = useState(false)
 
 
     return product && (
-        <div onClick={()=>{navigate(`/products/${product.category.toLowerCase()}/${product._id}`); scrollTo(0,0)}} className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full hover:shadow-lg transition-shadow cursor-pointer group relative">
+        <>
+        <div onClick={()=>{navigate(`/products/${product.category.toLowerCase()}/${product._id}`); scrollTo(0,0)}} className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full hover:shadow-lg transition-all duration-300 cursor-pointer group relative">
             <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                 <WishlistButton productId={product._id} />
             </div>
-            <div className="group cursor-pointer flex items-center justify-center px-2">
+            <div className="cursor-pointer flex items-center justify-center px-2 py-2">
                 <img className="group-hover:scale-105 transition max-w-26 md:max-w-36" src={product.image[0]} alt={product.name} />
             </div>
             <div className="text-gray-500/60 text-sm">
@@ -50,18 +54,26 @@ const ProductCard = ({ product }) => {
             </div>
             
             {/* Quick View Button */}
-            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
                 <button
                     onClick={(e) => {
                         e.stopPropagation()
-                        // Quick view functionality can be added here
+                        setShowQuickView(true)
                     }}
-                    className="bg-white text-primary border border-primary px-3 py-1 rounded text-xs hover:bg-primary hover:text-white transition"
+                    className="bg-white text-primary border border-primary px-3 py-1 rounded text-xs hover:bg-primary hover:text-white transition-all shadow-md"
                 >
                     Quick View
                 </button>
             </div>
         </div>
+        
+        {showQuickView && (
+            <QuickView 
+                product={product} 
+                onClose={() => setShowQuickView(false)} 
+            />
+        )}
+        </>
     );
 };
 

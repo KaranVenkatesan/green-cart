@@ -8,14 +8,14 @@ const QuickView = ({ product, onClose }) => {
     if (!product) return null
 
     return (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
+            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold">Quick View</h2>
                         <button 
                             onClick={onClose}
-                            className="text-2xl text-gray-400 hover:text-gray-600"
+                            className="text-2xl text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center"
                         >
                             ×
                         </button>
@@ -26,7 +26,7 @@ const QuickView = ({ product, onClose }) => {
                             <img 
                                 src={product.image[0]} 
                                 alt={product.name}
-                                className="w-full h-64 object-cover rounded-lg"
+                                className="w-full h-64 object-contain rounded-lg border border-gray-200"
                             />
                         </div>
                         
@@ -36,7 +36,7 @@ const QuickView = ({ product, onClose }) => {
                             
                             <div className="flex items-center gap-0.5 mb-4">
                                 {Array(5).fill('').map((_, i) => (
-                                    <img key={i} className="w-4 h-4" src={i < 4 ? assets.star_icon : assets.star_dull_icon} />
+                                    <img key={i} className="w-4 h-4" src={i < 4 ? assets.star_icon : assets.star_dull_icon} alt="star" />
                                 ))}
                                 <span className="ml-2 text-sm text-gray-500">(4.0)</span>
                             </div>
@@ -61,7 +61,7 @@ const QuickView = ({ product, onClose }) => {
                                         addToCart(product._id)
                                         onClose()
                                     }}
-                                    className="flex-1 bg-gray-100 text-gray-800 py-3 rounded-lg hover:bg-gray-200 transition"
+                                    className="flex-1 bg-gray-100 text-gray-800 py-3 rounded-lg hover:bg-gray-200 transition font-medium"
                                 >
                                     Add to Cart
                                 </button>
@@ -70,7 +70,7 @@ const QuickView = ({ product, onClose }) => {
                                         navigate(`/products/${product.category.toLowerCase()}/${product._id}`)
                                         onClose()
                                     }}
-                                    className="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-primary-dull transition"
+                                    className="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-primary-dull transition font-medium"
                                 >
                                     View Details
                                 </button>
